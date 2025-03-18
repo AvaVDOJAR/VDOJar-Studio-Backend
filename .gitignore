@@ -1,0 +1,39 @@
+# Byte-compiled / cached files
+__pycache__
+./__pycache__
+
+*.py[cod]
+*$py.class
+.mypy_cache
+.vscode/
+# Virtual environment
+.venv
+.env
+*.env
+
+# Logs and databases
+*.log
+instance/
+*.sqlite3
+*.db
+
+# Compiled C extensions
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE & Editor files
+.vscode/
+*.swp
+.idea/
+*.iml
+
+# System files
+.DS_Store
+Thumbs.db
+
+ThumbnailData
+VideoData 
+
+apis.py
