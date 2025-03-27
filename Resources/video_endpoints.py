@@ -2,13 +2,13 @@ from flask.views import MethodView
 from flask import send_file, request
 from flask_smorest import Blueprint, abort #type:ignore
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from Models import VideoModel, ThumbnailModel
+from Models import VideoModel
 from database import db
-from schemas import VideoDetailsSchema, ThumbnailDetailsSchema
+from schemas import VideoApproveSchema
 import os
 import mimetypes
 from werkzeug.utils import secure_filename
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 
 
 blp = Blueprint("Video_Details", __name__, description= "Operations on video details")
@@ -94,6 +94,7 @@ class VideoDetails(MethodView):
                 "video_id": vid.video_id,
                 "video_title": vid.video_title,
                 "thumbnail": vid.thumbnail.to_dict() if vid.thumbnail else None,  # FIXED
+                "is_approved" : vid.is_approved
             }
             
             all_videos.append(video_data)
@@ -121,3 +122,25 @@ class GetVideo(MethodView):
         
         mime_type = mimetypes.guess_type(video_path)[0]
         return send_file(video_path, mimetype= mime_type)
+    
+    @jwt_required()
+    @blp.arguments(VideoApproveSchema)
+    def post(self,video_data,video_id):
+        claims = get_jwt()  # Get JWT claims
+        if not claims.get("is_admin"):  # Check if user is admin
+            abort(403, message="Admin access required")
+        
+
+        video = VideoModel.query.get_or_404(video_id)
+
+        if video :
+            # print(video_data["is_approved"])
+            video.is_approved = video_data["is_approved"]
+        else : 
+            abort(404, message= "Video Not exist")
+        
+        db.session.add(video)
+        db.session.commit()
+
+        return video.to_dict()
+

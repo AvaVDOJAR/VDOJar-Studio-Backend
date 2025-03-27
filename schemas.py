@@ -7,6 +7,7 @@ class VideoDetailsSchema(Schema):
     video_description = fields.Str()
     video_genre = fields.Str(required=True)
     user_id = fields.Int(required = True)
+    is_approved = fields.Bool(dump_only = True)
 
 class ThumbnailDetailsSchema(Schema):
     image_id = fields.Str(dump_only= True)
@@ -24,5 +25,12 @@ class UserSchema(Schema):
 class UserLoginSchema(Schema):
     user_email = fields.Str(required=True, validate=validate.Email(error="Invalid email format"))
     user_password = fields.Str(required=True, load_only=True, validate=validate.Length(min=6))
+
+
+class VideoApproveSchema(Schema):
+    user_id = fields.Int(required=True)
+    video_id= fields.Int(required = True)
+    is_approved = fields.Bool(required = True)
+
 
     

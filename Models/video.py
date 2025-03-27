@@ -9,7 +9,7 @@ class VideoModel(db.Model): # type:ignore
     video_description = db.Column(db.String)
     video_genre = db.Column(db.String)  # Store the list of genres as a comma-separated string
     user_id = db.Column(db.Integer, db.ForeignKey("user_details.user_id"), nullable=False)
-
+    is_approved = db.Column(db.Boolean, default = False)
     # Relationships
     user = db.relationship("UserModel", back_populates="videos")
     thumbnail = db.relationship("ThumbnailModel", back_populates="video", uselist=False, cascade="all, delete-orphan")
@@ -22,6 +22,7 @@ class VideoModel(db.Model): # type:ignore
             "video_title": self.video_title,
             "video_description": self.video_description,
             "video_genre": self.video_genre.split(',') if self.video_genre else [],  # Convert string to list
+            "is_approved": self.is_approved,
             "user_id": self.user_id,
             "thumbnail": self.thumbnail.to_dict() if self.thumbnail else None  # Include thumbnail info
         }

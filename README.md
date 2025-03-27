@@ -82,6 +82,5 @@ passlib
 - Tokens can be revoked by adding them to `BLOCKLIST`.
 - Configure `constant.py` with appropriate values before running the app.
 
-## License
-This project is licensed under the MIT License. See `LICENSE` for details.
-
+## Check Admin
+- If the user logged in with vdojar mail id  then admin access get approved

@@ -17,15 +17,19 @@ class UserRegister(MethodView):
 
     @blp.arguments(UserSchema)
     def post(self, user_data):
-
+        is_admin= False
         if UserModel.query.filter_by(user_email=user_data["user_email"]).first():
             abort(409, message="User with that email already exists.")
+        
+        if user_data["user_email"].find("vdojar.com") != -1:
+            is_admin= True
 
         user = UserModel(
             user_first_name=user_data["user_first_name"],
             user_last_name=user_data["user_last_name"],
             user_email=user_data["user_email"],
             user_password=pbkdf2_sha256.hash(user_data["user_password"]),
+            is_admin = is_admin
         )
 
         try:
@@ -45,7 +49,11 @@ class UserLogin(MethodView):
         user = UserModel.query.filter(UserModel.user_email == user_data["user_email"]).first()
 
         if user and pbkdf2_sha256.verify(user_data["user_password"], user.user_password):
-            access_token = create_access_token(identity=str(user.user_id), fresh=True)
+            access_token = create_access_token(
+                identity=str(user.user_id), 
+                fresh=True,
+                additional_claims={"is_admin": user.is_admin}
+            )
             return {"message": "Login successful", "access_token": access_token}, 200
         
         abort(401, message="Invalid credentials")
@@ -66,6 +74,7 @@ class User(MethodView):
                 "user_first_name": user.user_first_name,
                 "user_last_name": user.user_last_name,
                 "user_email": user.user_email,
+                "is_admin" : user.is_admin
             },
             "videos": [
                 {
