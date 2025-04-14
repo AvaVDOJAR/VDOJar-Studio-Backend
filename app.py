@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask, jsonify
 from flask_smorest import Api #type:ignore
 from flask_cors import CORS #type:ignore
@@ -12,12 +14,14 @@ from Resources.video_endpoints import blp as VideoBlueprint
 from Resources.thumbnail_endpoints import blp as ThumbnailBlueprint
 from Resources.user_endpoints import blp as UserBlueprint
 
-
+# from flask_mail import Mail #type:ignore
+from extensions import mail
 # importing the api related from loudnary api
 from apis import cloud_name, api_key, api_secret, jwt_secret_key
 
 
 def create_app(db_url = None):
+    
     app = Flask(__name__)
     # Allow any request from 'http://localhost:port' and any headers
     CORS(app, 
@@ -54,8 +58,18 @@ def create_app(db_url = None):
     # this for sqlalchemy track modifications, which basically we don't need it slows down the sqlalchemy
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    app.config['MAIL_SERVER'] = "smtp.gmail.com"
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+    app.config['MAIL_USE_SSL'] = False
+
+    
     # initializes the flask sqlalchemy extension giving it our flask app
     db.init_app(app)
+    mail.init_app(app)
 
     # this is for the connect the flask smorest extension with Flask app
     api = Api(app)
