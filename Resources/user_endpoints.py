@@ -103,7 +103,7 @@ class UserRegister(MethodView):
         except SQLAlchemyError:
             abort(500, message="An error occurred while registering the user.")
 
-        return {"message": "User registered successfully. Please check your email to verify your account."}, 201
+        return {"message": "User registered successfully."}, 201
 
 # =================
 # ✅ User Login
@@ -171,5 +171,6 @@ class UserLogout(MethodView):
         jti = get_jwt()["jti"]
         BLOCKLIST.add(jti)
         return {"message": "Successfully logged out."}
+
 
 

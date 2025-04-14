@@ -32,5 +32,17 @@ class VideoApproveSchema(Schema):
     video_id= fields.Int(required = True)
     is_approved = fields.Bool(required = True)
 
+class UserEmailSchema(Schema):
+    user_email = fields.Str(required=True)
+
+class UserOTPVerifySchema(Schema):
+    user_email = fields.Str(required=True)
+    user_otp = fields.Str(required = True)
+
+class PasswordResetSchema(Schema):
+    user_email = fields.Str(required=True)
+    user_otp = fields.Str(required = True)
+    user_password = fields.Str(required=True)
+
 
     

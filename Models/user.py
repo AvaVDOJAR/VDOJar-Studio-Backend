@@ -1,4 +1,5 @@
 from database import db
+from sqlalchemy import DateTime
 
 class UserModel(db.Model): # type:ignore
     __tablename__ = "user_details"
@@ -10,6 +11,8 @@ class UserModel(db.Model): # type:ignore
     user_password = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default = False)
     is_verified = db.Column(db.Boolean, default = False)
+    user_otp = db.Column(db.String(6), nullable=True)
+    otp_expiry = db.Column(DateTime, nullable=True)
 
     # One-to-Many relationship with VideoModel
     videos = db.relationship("VideoModel", back_populates="user", lazy="dynamic", cascade="all, delete")

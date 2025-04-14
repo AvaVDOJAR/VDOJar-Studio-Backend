@@ -13,10 +13,11 @@ from blocklist import BLOCKLIST
 from Resources.video_endpoints import blp as VideoBlueprint
 from Resources.thumbnail_endpoints import blp as ThumbnailBlueprint
 from Resources.user_endpoints import blp as UserBlueprint
+from Resources.password_reset import blp as PasswordResetBlueprint;
 
 # from flask_mail import Mail #type:ignore
 from extensions import mail
-# importing the api related from loudnary api
+# importing the api related from cloudnary api
 from apis import cloud_name, api_key, api_secret, jwt_secret_key
 
 
@@ -143,6 +144,7 @@ def create_app(db_url = None):
     api.register_blueprint(VideoBlueprint)
     api.register_blueprint(ThumbnailBlueprint)
     api.register_blueprint(UserBlueprint)
+    api.register_blueprint(PasswordResetBlueprint)
 
     return app
 
